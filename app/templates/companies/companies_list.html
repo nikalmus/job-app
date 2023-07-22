@@ -1,0 +1,22 @@
+<!-- templates/companies/companies_list.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company List</title>
+</head>
+<body>
+    <h1>Company List</h1>
+    <ul>
+        {% for company in companies %}
+            <li>{{ company.name }} - <a href="{{ url_for('company.update_company', company_id=company.id) }}">Edit</a>
+                - <form action="{{ url_for('company.delete_company', company_id=company.id) }}" method="post">
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('company.create_company') }}">Add New Company</a>
+</body>
+</html>

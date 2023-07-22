@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Job</title>
+</head>
+<body>
+    <h1>Update Job</h1>
+    <form action="{{ url_for('job.update_job', job_id=job.id) }}" method="post">
+        <label for="title">Title:</label>
+        <input type="text" name="title" value="{{ job.title }}" required>
+        <!-- Other form fields for company_id, must_have, nice_have, link, etc. -->
+
+        <input type="submit" value="Update">
+    </form>
+    <a href="{{ url_for('job.list_jobs') }}">Cancel</a>
+</body>
+</html>
