@@ -1,11 +1,12 @@
 <!-- templates/companies/update_company.html -->
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Update Company</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+Update Company
+{% endblock %}
+
+{% block content %}
     <h1>Update Company</h1>
     <form action="{{ url_for('company.update_company', company_id=company.id) }}" method="post">
         <label for="name">Name:</label>
@@ -14,5 +15,4 @@
         <input type="submit" value="Update">
     </form>
     <a href="{{ url_for('company.list_companies') }}">Cancel</a>
-</body>
-</html>
+{% endblock %}

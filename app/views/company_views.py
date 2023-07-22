@@ -5,6 +5,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, curren
 
 company_bp = Blueprint('company', __name__, url_prefix='/companies', template_folder='templates/companies')
 
+def dict_from_row(row, cursor):
+    """Converts a database query result row to a dictionary."""
+    return {description[0]: value for description, value in zip(cursor.description, row)}
+
 @company_bp.route('/')
 def list_companies():
     conn = current_app.config['DB_CONN']
@@ -15,6 +19,9 @@ def list_companies():
     companies = cursor.fetchall()
 
     cursor.close()
+
+    # Convert the query results to dictionaries
+    companies = [dict_from_row(row, cursor) for row in companies]
 
     return render_template('companies/companies_list.html', companies=companies)
 
@@ -48,6 +55,9 @@ def update_company(company_id):
     cursor.execute("SELECT * FROM company WHERE id = %s", (company_id,))
     company = cursor.fetchone()
 
+    # Convert the company result to a dictionary
+    company = dict_from_row(company, cursor)
+
     if request.method == 'POST':
         # Get form data from the request
         name = request.form['name']
@@ -61,7 +71,7 @@ def update_company(company_id):
 
         return redirect(url_for('company.list_companies'))
 
-    return render_template('update_company.html', company=company)
+    return render_template('companies/update_company.html', company=company)
 
 @company_bp.route('/delete/<int:company_id>', methods=['POST'])
 def delete_company(company_id):

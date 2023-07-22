@@ -1,18 +1,18 @@
 <!-- templates/companies/create_company.html -->
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Company</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+Create Company
+{% endblock %}
+
+{% block content %}
     <h1>Create Company</h1>
     <form action="{{ url_for('company.create_company') }}" method="post">
         <label for="name">Name:</label>
         <input type="text" name="name" required>
 
-        <input type="submit" value="Create">
+        <input type="submit" value="Create" class="btn btn-primary">
     </form>
-    <a href="{{ url_for('company.list_companies') }}">Cancel</a>
-</body>
-</html>
+    <a href="{{ url_for('company.list_companies') }}" class="btn btn-secondary mt-3">Cancel</a>
+{% endblock %}

@@ -1,22 +1,42 @@
 <!-- templates/companies/companies_list.html -->
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Company List</title>
-</head>
-<body>
-    <h1>Company List</h1>
-    <ul>
-        {% for company in companies %}
-            <li>{{ company.name }} - <a href="{{ url_for('company.update_company', company_id=company.id) }}">Edit</a>
-                - <form action="{{ url_for('company.delete_company', company_id=company.id) }}" method="post">
-                    <input type="submit" value="Delete">
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+{% extends 'base.html' %}
 
-    <a href="{{ url_for('company.create_company') }}">Add New Company</a>
-</body>
-</html>
+{% block title %}
+Company List
+{% endblock %}
+
+{% block content %}
+    <h1>Company List</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for company in companies %}
+                <tr>
+                    <td>{{ company.name }}</td>
+                    <td>
+                        <form style="display: inline;" action="{{ url_for('company.update_company', company_id=company.id) }}" method="get">
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form style="display: inline;" action="{{ url_for('company.delete_company', company_id=company.id) }}" method="post">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('company.create_company') }}" class="btn btn-primary">Add New Company</a>
+
+{% endblock %}
+
+

@@ -1,17 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Update Job</title>
-</head>
-<body>
-    <h1>Update Job</h1>
-    <form action="{{ url_for('job.update_job', job_id=job.id) }}" method="post">
+{% extends 'base.html' %}
+
+{% block title %}
+Update Job
+{% endblock %}
+
+{% block content %}
+<h1>Update Job</h1>
+<form action="{{ url_for('job.update_job', job_id=job.id) }}" method="post">
+    <div>
         <label for="title">Title:</label>
         <input type="text" name="title" value="{{ job.title }}" required>
-        <!-- Other form fields for company_id, must_have, nice_have, link, etc. -->
+    </div>
+    <div>
+        <label for="company">Company:</label>
+        <select name="company" required>
+            {% for company in companies %}
+                <option value="{{ company.id }}" {% if company.id == job.company.id %}selected{% endif %}>{{ company.name }}</option>
+                <!-- <option value="{{ company.id }}" {% if company.id == 2 %}selected{% endif %}>{{ company.name }}</option> -->
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="must_have">Must Have:</label>
+        <textarea name="must_have" rows="4" cols="50">{{ job.must_have|join('\n') if job.must_have else '' }}</textarea>
+    </div>
+    <div>
+        <label for="nice_have">Nice Have:</label>
+        <textarea name="nice_have" rows="4" cols="50">{{ job.nice_have|join('\n') if job.nice_have else '' }}</textarea>
+    </div>
+    <div>
+        <label for="link">Link:</label>
+        <input type="text" name="link" value="{{ job.link }}">
+    </div>
+    <div>
+        <label for="applied_date">Applied Date:</label>
+        <input type="date" name="applied_date" value="{{ job.applied_date|default('') }}">
+    </div>
+    <div>
+        <label for="first_contact_date">First Contact Date:</label>
+        <input type="date" name="first_contact_date" value="{{ job.first_contact_date|default('') }}">
+    </div>
+    <div>
+        <label for="last_contact_date">Last Contact Date:</label>
+        <input type="date" name="last_contact_date" value="{{ job.last_contact_date|default('') }}">
+    </div>
+    <div>
+        <label for="status">Status:</label>
+        <input type="text" name="status" value="{{ job.status|default('Crickets') }}">
+    </div>
+    <!-- Add other form fields as needed -->
 
-        <input type="submit" value="Update">
-    </form>
-    <a href="{{ url_for('job.list_jobs') }}">Cancel</a>
-</body>
-</html>
+    <input type="submit" value="Update">
+</form>
+<a href="{{ url_for('job.list_jobs') }}">Cancel</a>
+{% endblock %}

@@ -1,17 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Job</title>
-</head>
-<body>
-    <h1>Create Job</h1>
-    <form action="{{ url_for('job.create_job') }}" method="post">
-        <label for="title">Title:</label>
-        <input type="text" name="title" required>
-        <!-- Other form fields for company_id, must_have, nice_have, link, etc. -->
+{% extends 'base.html' %}
 
-        <input type="submit" value="Create">
-    </form>
-    <a href="{{ url_for('job.list_jobs') }}">Cancel</a>
-</body>
-</html>
+{% block title %}
+Create Job
+{% endblock %}
+
+{% block content %}
+<h1>Create Job</h1>
+<form action="{{ url_for('job.create_job') }}" method="post" class="col-md-6">
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" name="title" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="company">Company:</label>
+        <select name="company" class="form-control" required>
+            <option value="" disabled selected>Select Company</option>
+            {% for company in companies %}
+                <option value="{{ company.id }}">{{ company.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="must_have_1">Must Have 1:</label>
+        <input type="text" name="must_have" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="must_have_2">Must Have 2:</label>
+        <input type="text" name="must_have" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="must_have_3">Must Have 3:</label>
+        <input type="text" name="must_have" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="nice_have_1">Nice Have 1:</label>
+        <input type="text" name="nice_have" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="nice_have_2">Nice Have 2:</label>
+        <input type="text" name="nice_have" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="nice_have_3">Nice Have 3:</label>
+        <input type="text" name="nice_have" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <label for="link">Link:</label>
+        <input type="text" name="link" class="form-control">
+    </div>
+
+    <input type="submit" value="Create" class="btn btn-primary">
+</form>
+<a href="{{ url_for('job.list_jobs') }}" class="btn btn-secondary mt-3">Cancel</a>
+{% endblock %}
