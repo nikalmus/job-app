@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Job Details
+{% endblock %}
+
+{% block content %}
+    <h1>Job Details</h1>
+    <dl>
+        <dt>ID:</dt>
+        <dd>{{ job.id }}</dd>
+
+        <dt>Title:</dt>
+        <dd>{{ job.title }}</dd>
+
+        <dt>Company:</dt>
+        <dd>{{ job.company.name }}</dd>
+
+        <dt>Status:</dt>
+        <dd>{{ job.status }}</dd>
+
+        <!-- Add other fields as needed -->
+
+        <dt>Must Have:</dt>
+        <dd>
+            <ul>
+                {% for item in job.must_have %}
+                    {% set items = item.split('\r+') %}
+                    {% for sub_item in items %}
+                        <li>{{ sub_item.strip() }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </dd>
+
+        <dt>Nice Have:</dt>
+        <dd>
+            <ul>
+                {% for item in job.nice_have %}
+                    {% set items = item.split('\r+') %}
+                    {% for sub_item in items %}
+                        <li>{{ sub_item.strip() }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </dd>
+    </dl>
+    <a href="{{ url_for('job.update_job', job_id=job.id) }}" class="btn btn-primary">Update Job</a>
+    <a href="{{ url_for('job.list_jobs') }}" class="btn btn-secondary">Back to Job List</a>
+{% endblock %}
