@@ -8,11 +8,20 @@
 <body>
     <h1>Welcome to the Job Application Tracker</h1>
     <p>Use the links below to navigate:</p>
+    
+    <!-- Companies links -->
+    <h2>Companies:</h2>
     <ul>
         <li><a href="{{ url_for('company.list_companies') }}">View Companies</a></li>
         <li><a href="{{ url_for('company.create_company') }}">Add New Company</a></li>
+    </ul>
+
+    <!-- Jobs links -->
+    <h2>Jobs:</h2>
+    <ul>
         <li><a href="{{ url_for('job.list_jobs') }}">View Jobs</a></li>
         <li><a href="{{ url_for('job.create_job') }}">Add New Job</a></li>
     </ul>
 </body>
 </html>
+
