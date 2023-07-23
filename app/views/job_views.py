@@ -107,6 +107,7 @@ def create_job():
     # Convert the query results to dictionaries
     companies = [dict_from_row(row, cursor) for row in companies]
 
+    # Fetch status values
     status_query = "SELECT enumlabel FROM pg_enum WHERE enumtypid = 'job_status'::regtype"
     cursor.execute(status_query)
     job_status_values = [row[0] for row in cursor.fetchall()]
@@ -144,12 +145,13 @@ def update_job(job_id):
     cursor.execute("SELECT id, name FROM company")
     companies = cursor.fetchall()
 
+    # Convert the query results to dictionaries
+    companies = [dict_from_row(row, cursor) for row in companies]
+
+    # Fetch status values
     status_query = "SELECT enumlabel FROM pg_enum WHERE enumtypid = 'job_status'::regtype"
     cursor.execute(status_query)
     job_status_values = [row[0] for row in cursor.fetchall()]
-
-    # Convert the query results to dictionaries
-    companies = [dict_from_row(row, cursor) for row in companies]
 
     # Get the job data from the database using job_id
     query = '''SELECT job.id, job.title, company.id AS company_id, company.name AS company_name,
