@@ -45,23 +45,26 @@ Update Job
             <label for="nice_have_3">Nice Have 3:</label>
             <input type="text" name="nice_have_3" value="{{ job.nice_have[2] if job.nice_have|length >= 3 else '' }}" class="form-control">
         </div>
-        <div>
-            <label for="link">Link:</label>
-            <input type="text" name="link" value="{{ job.link }}" class="form-control">
-        </div>
-        <div>
+        
+        <div class="mb-3">
             <label for="applied_date">Applied Date:</label>
             <input type="date" name="applied_date" value="{{ job.applied_date|default('') }}" class="form-control">
         </div>
-        <div>
+        <div class="mb-3">
             <label for="first_contact_date">First Contact Date:</label>
             <input type="date" name="first_contact_date" value="{{ job.first_contact_date|default('') }}" class="form-control">
         </div>
-        <div>
+        <div class="mb-3">
             <label for="last_contact_date">Last Contact Date:</label>
             <input type="date" name="last_contact_date" value="{{ job.last_contact_date|default('') }}" class="form-control">
         </div>
-        <div>
+
+        <div class="mb-3">
+            <label for="link">Link:</label>
+            <input type="text" name="link" value="{{ job.link }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
             <label for="status">Status:</label>
             <select name="status" required>
                 {% for status in job_status_values %}
