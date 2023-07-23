@@ -100,12 +100,16 @@ def create_job():
     conn = current_app.config['DB_CONN']
     cursor = conn.cursor()
 
-    # Fetch all companies from the database
+    # Fetch all companies
     cursor.execute("SELECT id, name FROM company")
     companies = cursor.fetchall()
 
     # Convert the query results to dictionaries
     companies = [dict_from_row(row, cursor) for row in companies]
+
+    status_query = "SELECT enumlabel FROM pg_enum WHERE enumtypid = 'job_status'::regtype"
+    cursor.execute(status_query)
+    job_status_values = [row[0] for row in cursor.fetchall()]
 
     if request.method == 'POST':
         # Get form data from the request
@@ -129,16 +133,20 @@ def create_job():
 
         return redirect(url_for('job.list_jobs'))
 
-    return render_template('jobs/create_job.html', companies=companies)
+    return render_template('jobs/create_job.html', companies=companies, job_status_values=job_status_values)
 
 @job_bp.route('/update/<int:job_id>', methods=['GET', 'POST'])
 def update_job(job_id):
     conn = current_app.config['DB_CONN']
     cursor = conn.cursor()
 
-    # Fetch all companies from the database
+    # Fetch all companies
     cursor.execute("SELECT id, name FROM company")
     companies = cursor.fetchall()
+
+    status_query = "SELECT enumlabel FROM pg_enum WHERE enumtypid = 'job_status'::regtype"
+    cursor.execute(status_query)
+    job_status_values = [row[0] for row in cursor.fetchall()]
 
     # Convert the query results to dictionaries
     companies = [dict_from_row(row, cursor) for row in companies]
@@ -194,10 +202,7 @@ def update_job(job_id):
         print(f"Job Company ID: {job['company']['id']}")  # Access company_id via nested dictionary
         return redirect(url_for('job.list_jobs'))
 
-    return render_template('jobs/update_job.html', job=job, companies=companies)
-
-
-
+    return render_template('jobs/update_job.html', job=job, companies=companies, job_status_values=job_status_values)
 
 
 @job_bp.route('/delete/<int:job_id>', methods=['POST'])

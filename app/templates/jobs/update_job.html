@@ -63,9 +63,12 @@ Update Job
         </div>
         <div>
             <label for="status">Status:</label>
-            <input type="text" name="status" value="{{ job.status|default('Crickets') }}" class="form-control">
+            <select name="status" required>
+                {% for status in job_status_values %}
+                    <option value="{{ status }}" {% if job.status == status %}selected{% endif %}>{{ status }}</option>
+                {% endfor %}
+            </select>
         </div>
-        <!-- Add other form fields as needed -->
     
         <button type="submit" class="btn btn-primary mt-3 mb-3">Update</button>
     </form>
