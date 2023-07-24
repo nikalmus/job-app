@@ -15,8 +15,6 @@ def dict_from_row(row, cursor):
     for idx, col in enumerate(cursor.description):
         if isinstance(row[idx], (date, datetime)):
             d[col.name] = row[idx].isoformat()
-        elif isinstance(row[idx], list):
-            d[col.name] = row[idx]
         else:
             d[col.name] = row[idx]
     return d
@@ -28,10 +26,21 @@ def list_jobs():
     cursor = conn.cursor()
 
     # Fetch all jobs from the database
-    query = '''SELECT job.id, job.title, company.id AS company_id, company.name AS company_name,
-                job.applied_date, job.first_contact_date, job.last_contact_date, job.status
-                FROM job JOIN company ON job.company_id = company.id'''
-    
+    query = """
+        SELECT
+            job.id,
+            job.title,
+            company.id AS company_id,
+            company.name AS company_name,
+            job.applied_date,
+            job.first_contact_date,
+            job.last_contact_date,
+            job.status
+        FROM
+            job
+        JOIN
+            company ON job.company_id = company.id
+        """
 
     cursor.execute(query)
     jobs_data = cursor.fetchall()
@@ -60,11 +69,26 @@ def job_detail(job_id):
     cursor = conn.cursor()
 
     # Get the job data from the database using job_id
-    query = '''SELECT job.id, job.title, company.id AS company_id, company.name AS company_name,
-                job.must_have, job.nice_have, job.link, job.applied_date, job.first_contact_date,
-                job.last_contact_date, job.status
-                FROM job JOIN company ON job.company_id = company.id
-                WHERE job.id = %s'''
+    query = """
+        SELECT
+            job.id,
+            job.title,
+            company.id AS company_id,
+            company.name AS company_name,
+            job.must_have,
+            job.nice_have,
+            job.link,
+            job.applied_date,
+            job.first_contact_date,
+            job.last_contact_date,
+            job.status
+        FROM
+            job
+        JOIN
+            company ON job.company_id = company.id
+        WHERE
+            job.id = %s
+        """
     cursor.execute(query, (job_id,))
     job_data = cursor.fetchone()
 
@@ -118,6 +142,9 @@ def create_job():
         company_id = request.form['company']
         must_have = request.form.getlist('must_have')  # Get list of must_have values
         nice_have = request.form.getlist('nice_have')  # Get list of nice_have values
+        applied_date = request.form['applied_date']
+        first_contact_date = request.form['first_contact_date'] or None  # Convert empty string to None to avoid InvalidDatetimeFormat if empty
+        last_contact_date = request.form['last_contact_date'] or None    
         link = request.form['link']
 
         print("----------------------request.form:")
@@ -126,8 +153,14 @@ def create_job():
 
         # Validate and insert the new job into the database
         if title and company_id:
-            cursor.execute("INSERT INTO job (title, company_id, must_have, nice_have, link) VALUES (%s, %s, %s, %s, %s)",
-                           (title, company_id, must_have, nice_have, link))
+            query = """
+                INSERT INTO job (
+                    title, company_id, must_have, nice_have,
+                    applied_date, first_contact_date, last_contact_date, link
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            cursor.execute(query, (title, company_id, must_have, nice_have, applied_date, first_contact_date, last_contact_date, link))
             conn.commit()
 
         cursor.close()
@@ -154,11 +187,27 @@ def update_job(job_id):
     job_status_values = [row[0] for row in cursor.fetchall()]
 
     # Get the job data from the database using job_id
-    query = '''SELECT job.id, job.title, company.id AS company_id, company.name AS company_name,
-                job.must_have, job.nice_have, job.link, job.applied_date, job.first_contact_date,
-                job.last_contact_date, job.status
-                FROM job JOIN company ON job.company_id = company.id
-                WHERE job.id = %s'''
+    query = """
+    SELECT
+        job.id,
+        job.title,
+        company.id AS company_id,
+        company.name AS company_name,
+        job.must_have,
+        job.nice_have,
+        job.link,
+        job.applied_date,
+        job.first_contact_date,
+        job.last_contact_date,
+        job.status
+    FROM
+        job
+    JOIN
+        company ON job.company_id = company.id
+    WHERE
+        job.id = %s
+    """
+
     cursor.execute(query, (job_id,))
     job_data = cursor.fetchone()
 
@@ -193,10 +242,32 @@ def update_job(job_id):
             first_contact_date = first_contact_date or None
             last_contact_date = last_contact_date or None
 
-            cursor.execute(
-                "UPDATE job SET title = %s, company_id = %s, must_have = %s, nice_have = %s, link = %s, applied_date = %s, first_contact_date = %s, last_contact_date = %s, status = %s WHERE id = %s",
-                (title, company_id, must_have, nice_have, link, applied_date, first_contact_date, last_contact_date, status, job_id)
-            )
+            query = """
+                UPDATE job
+                SET title = %s,
+                    company_id = %s,
+                    must_have = %s,
+                    nice_have = %s,
+                    applied_date = %s,
+                    first_contact_date = %s,
+                    last_contact_date = %s,
+                    link = %s,
+                    status = %s
+                WHERE id = %s
+            """
+
+            cursor.execute(query, (
+                title,
+                company_id,
+                must_have,
+                nice_have,
+                applied_date,
+                first_contact_date,
+                last_contact_date,
+                link,
+                status,
+                job_id
+            ))
             conn.commit()
 
         cursor.close()

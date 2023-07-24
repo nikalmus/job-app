@@ -16,21 +16,20 @@ Job Details
         <dt>Company:</dt>
         <dd>{{ job.company.name }}</dd>
 
-        <dt>Status:</dt>
-        <dd>{{ job.status }}</dd>
-
-        <!-- Add other fields as needed -->
-
         <dt>Must Have:</dt>
         <dd>
+            {% if job.must_have %}
             <ul>
                 {% for item in job.must_have %}
                     {% set items = item.split('\r+') %}
                     {% for sub_item in items %}
-                        <li>{{ sub_item.strip() }}</li>
+                        {% if item.strip() %}
+                            <li>{{ sub_item.strip() }}</li>
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
             </ul>
+            {% endif %}
         </dd>
 
         <dt>Nice Have:</dt>
@@ -39,11 +38,19 @@ Job Details
                 {% for item in job.nice_have %}
                     {% set items = item.split('\r+') %}
                     {% for sub_item in items %}
-                        <li>{{ sub_item.strip() }}</li>
+                        {% if item.strip() %}
+                            <li>{{ sub_item.strip() }}</li>
+                        {% endif %}
                     {% endfor %}
                 {% endfor %}
             </ul>
         </dd>
+
+        <dt>Status:</dt>
+        <dd>{{ job.status }}</dd>
+
+        <dd><a href="{{ job.link }}">Link</a></dd>
+
     </dl>
     <a href="{{ url_for('job.update_job', job_id=job.id) }}" class="btn btn-primary">Update Job</a>
     <a href="{{ url_for('job.list_jobs') }}" class="btn btn-secondary">Back to Job List</a>
